@@ -86,11 +86,12 @@ def teszt_mmap(filename):
 
 
 
-for i in xrange(10):
+for i in xrange(100):
 	teszt_fileio("kernel.log")
 	teszt_mmap("kernel.log")
 
 
 print "\n\n"
 for i in AverageTimes.runtimes:
-	print "\t",i,sum(AverageTimes.runtimes[i])/len(AverageTimes.runtimes[i])
+	w=AverageTimes.runtimes[i]
+	print "\t%-20s %4u %3.8f %3.8f"%(i,len(w),sum(w),sum(w)/len(w))
