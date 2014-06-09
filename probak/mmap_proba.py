@@ -1,6 +1,12 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
+'''
+Ez a program csak azért született, mert valahol olvastam az mmap-ről és elsősorban kíváncsi voltam a
+működésére, másodsorban azt is olvastam, hogy gyorsabb, mint a file I/O és ezt is tesztelni akartam.
+Na ez utóbbi nem nyert, nálam következetesen hosszabb időket fut mmap-pel, mintha hagyományos I/O-t 
+használtam volna.
 
+'''
 import time, mmap
 
 class Counter(object):
