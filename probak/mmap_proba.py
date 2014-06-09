@@ -23,17 +23,41 @@ class Counter(object):
 	def get(self):
 		return self.count
 
+class AverageTimes(object):
+	runtimes={}
+	@classmethod
+	def add(cls,name,time):
+		if(cls.runtimes.has_key(name)):
+			cls.runtimes[name].append(time)
+		else:
+			cls.runtimes[name]=[time]
 
-def measure(callable,*args,**kwargs):
-	def timerfunc(*args,**kwargs):
-		t1=time.time()
-		callable(*args)
-		t2=time.time()
-		print "Runtime of %s was %f seconds.\n"%(callable.__name__,t2-t1)
-	print "--- measure ---"
-	return timerfunc
 
-@measure
+class Measure(object):
+	def __init__(self, functionName):
+		self.function=functionName
+		self.reset()
+
+	def reset(self):
+		self.lengthOfTheLastRun=0
+
+	def getLength(self):
+		return self.lengthOfTheLastRun
+
+	def __call__(self, *args):
+		return self.decorFunction(*args)
+
+	def decorFunction(self, *args):
+		starttime=time.time()
+		returnValue=self.function(*args)
+		endtime=time.time()
+		self.lengthOfTheLastRun=endtime-starttime
+		AverageTimes.add(self.function.__name__,self.lengthOfTheLastRun)
+		return returnValue
+
+
+
+@Measure
 def teszt_fileio(filename):
 	
 	c=Counter()
@@ -43,7 +67,7 @@ def teszt_fileio(filename):
 	print "(file) Read lines:%u"%c.get()
 
 	
-@measure
+@Measure
 def teszt_mmap(filename):
 	c=Counter()
 	with open(filename,"r") as f:
@@ -62,3 +86,7 @@ for i in xrange(10):
 	teszt_fileio("kernel.log")
 	teszt_mmap("kernel.log")
 
+
+print "\n\n"
+for i in AverageTimes.runtimes:
+	print "\t",i,sum(AverageTimes.runtimes[i])/len(AverageTimes.runtimes[i])
