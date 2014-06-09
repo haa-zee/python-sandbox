@@ -34,6 +34,10 @@ class AverageTimes(object):
 
 
 class Measure(object):
+	'''
+	Ennek az osztálynak a kódját - legalábbis az ötletét - a django.hu-ról "loptam, bár az valamivel kulturáltabb :)"
+	http://django.hu/2010/8/19/dekoracio#extended
+	'''
 	def __init__(self, functionName):
 		self.function=functionName
 		self.reset()
