@@ -1,0 +1,70 @@
+Log analizáló (elsősorban openwrt/tomato rendszerek IPv4 csomagszűrőjének logjához, melyet syslog/syslog-ng segítségével írt a rendszer)
+
+
+Input rekord példák:
+(sajnos csupa eldobott csomag áll csak rendelkezésemre)
+
+ICMP:
+2014 May 28 16:32:58 127.0.0.1 user.warning kernel: DROP IN=ppp0 OUT= MAC= SRC=m.m.m.m DST=n.n.n.n LEN=32 TOS=0x00 PREC=0x00 TTL=47 ID=0 DF PROTO=ICMP TYPE=8 CODE=0 ID=49723 SEQ=4429
+
+TCP:
+2014 May 28 12:17:51 127.0.0.1 user.warning kernel: DROP IN=ppp0 OUT= MAC= SRC=m.m.m.m DST=n.n.n.n LEN=253 TOS=0x00 PREC=0x00 TTL=50 ID=11531 PROTO=TCP SPT=5228 DPT=58840 SEQ=1975918967 ACK=1450923285 WINDOW=670 RES=0x00 ACK PSH URGP=0 OPT (0101080AB104C75E00FDF545)
+2014 May 28 16:31:11 127.0.0.1 user.warning kernel: DROP IN=ppp0 OUT= MAC= SRC=m.m.m.m DST=n.n.n.n LEN=60 TOS=0x00 PREC=0x00 TTL=55 ID=60886 DF PROTO=TCP SPT=50572 DPT=56720 SEQ=1472571429 ACK=0 WINDOW=11680 RES=0x00 SYN URGP=0 OPT (020405B40402080A003154A40000000001030300) 
+2014 May 28 16:36:43 127.0.0.1 user.warning kernel: DROP IN=ppp0 OUT= MAC= SRC=m.m.m.m DST=n.n.n.n LEN=40 TOS=0x00 PREC=0x00 TTL=249 ID=54321 PROTO=TCP SPT=54975 DPT=9817 SEQ=3454101703 ACK=0 WINDOW=65535 RES=0x00 SYN URGP=0
+
+UDP:
+2014 May 28 16:51:29 127.0.0.1 user.warning kernel: DROP IN=ppp0 OUT= MAC= SRC=m.m.m.m DST=n.n.n.n LEN=44 TOS=0x00 PREC=0x00 TTL=113 ID=54456 PROTO=UDP SPT=1041 DPT=16464 LEN=24
+
+--------------------------------------------------------------------------------------------------------------------------------------
+
+Mit szeretnék látni?
+
+- Elsősorban a portscant végrehajtó címeket (sok csomag ugyanarról a forrás IP-ről, eltérő portokat címezve, többnyire random sorrendben)
+- Mely IP-kről jön a legtöbb eldobott csomag?
+- Milyen portokat próbálgatnak a legtöbbször?
+
+Szűrési feltételek:
+- source IP / destination IP
+- idő intervallum (?)
+- IN interface
+- protokoll+port
+- maximálisan megjelenített sorok száma (pl. a legtöbbször szereplő source IP-k közül az első tíz)
+
+
+------------------------------------------------------------------------------------------------------------------------------------------
+Objektumok(? - ezek inkább csak adatstruktúrák, mivel metódusokat egyelőre nem nagyon tudok hozzájuk rendelni)
+
+LogRecord(object):
+# Ez egy általános syslog-ng bejegyzés definíciója
+- forrás sor (string)
+- Időpont (Time??)
+- log source IP
+- loglevel
+- facility
+	Metódust egyet tudok elképzelni: aki kibontja az objektum inicializálása során az eredeti rekordból a fenti mezőket.
+
+IPLogRecord(LogRecord)
+- ACCEPT/DROP (minek nevezzelek? :) )
+- INInterface
+- OUTInterface
+- MACAddress (??? a látott példák alapján nem teljesen tiszta a funkciója)
+- SRCAddress (SRC=... - csomaghoz tartozó forrás cím)
+- DSTAddress (DST=... - csomag cél címe)
+- Protocol (icmp, tcp, udp - egyebet még nem láttam a logokban)
+
+	Tartozik hozzá egy újabb metódus, amely az '='-t tartalmazó párokat teszi ki egy asszociatív tömbbe. (bal oldalról a név, jobb oldalról az érték. 
+	például: SRC=194.243.54.66 -> {'SRC':'194.243.54.66'} - később, a leszármazottak ebből a tömbből hozhatnak létre újabb objektumokat. Jelen példában
+	az IP címet egy IPaddress objektumként tárolja, aminek lehet például host nevet visszaadó metódusa, ping metódusa etc.) 
+
+
+ICMPLogRecord(IPLogRecord):
+- Type
+
+TCPLogRecord(IPLogRecord):
+- SRCPort (SPT)
+- DSTPort (DPT)
+- SYNFlag (True/False)
+
+UDPLogRecord(IPLogRecord):
+- SRCPort (SPT)
+- DSTPort (DPT)
