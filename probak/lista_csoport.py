@@ -17,7 +17,7 @@ def group_iterator(lista, separator="\n"):
 		if i=="\n":
 			if len(next_group)>0:
 				yield next_group
-			next_group=[]	
+				next_group=[]	
 		else:
 			next_group.append(i)
 	if len(next_group)>0: yield next_group
