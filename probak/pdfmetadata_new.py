@@ -1,12 +1,17 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
+# a pdfminer új verziójával működik, amit source-ból vagy a pip segítségével tudsz telepíteni!
+
+
+
 import os,sys
 from fnmatch import fnmatch
 
 # a köv. sorhoz szükség van a pdfminer-re, amit ubuntun a python-pdfminer csomag tartalmaz.
 # Ha nincs csomagban, akkor a githubról elérhető (talán máshonnan is)
-from pdfminer.pdfparser import PDFParser, PDFDocument
+from pdfminer.pdfparser import PDFParser
+from pdfminer.pdfdocument import PDFDocument
 
 
 def pdfMetadata(pathToPDF):
@@ -15,10 +20,7 @@ def pdfMetadata(pathToPDF):
 	'''
 	with open(pathToPDF,"rb") as pdfFile:
 		parser=PDFParser(pdfFile)
-		document=PDFDocument()
-		parser.set_document(document)
-		document.set_parser(parser)
-		document.initialize()
+		document=PDFDocument(parser)
 	return document.info
 
 def findFiles(fileSpec):
