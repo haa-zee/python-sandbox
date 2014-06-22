@@ -12,15 +12,15 @@ lista2=["\n","random","valami","\n","\n","\n","masik","harmadik","\n","\n","ujab
 
 
 def group_iterator(lista, separator="\n"):
-	next_group=[]
-	for i in lista:
-		if i=="\n":
-			if len(next_group)>0:
-				yield next_group
-				next_group=[]	
-		else:
-			next_group.append(i)
-	if len(next_group)>0: yield next_group
+    next_group=[]
+    for i in lista:
+        if i=="\n":
+            if len(next_group)>0:
+                yield next_group
+                next_group=[]    
+        else:
+            next_group.append(i)
+    if len(next_group)>0: yield next_group
 
 
 
