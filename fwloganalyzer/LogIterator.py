@@ -19,6 +19,9 @@ class LogIterator(object):
     lesz helyette. Csak azt még ki kell találni. :)
     '''
     def __init__(self, fileObject, parserObject=str, filterExpression='.*kernel: (DROP|ACCEPT) '):
+        # a köv. if valószínűleg felesleges és értelmetlen is, mivel így egyéb iteratort nem tehetek a helyére,
+        # holott teszteléskor jól jöhet, ha nem egy fájllal tesztelek, hanem valami fix objektummal, aminek
+        # van read metódusa
         if(not isinstance(fileObject,file)):
             raise TypeError(fileObject)
         self.__logfile=fileObject
