@@ -27,12 +27,12 @@ class Singleton(type):
 class SingSingSingleton(object):
     __metaclass__=Singleton
     
+        
 class XSingSingSingleton(SingSingSingleton):
     pass
 
 a=SingSingSingleton()
 b=SingSingSingleton()
 c=XSingSingSingleton()
-
 print a,b
 print c

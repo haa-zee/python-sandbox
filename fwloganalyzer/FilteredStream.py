@@ -4,7 +4,7 @@ Created on Jun 22, 2014
 
 @author: haazee
 
-Netfilter log analyzer
+Netfilter log analyzer package, 
 
 '''
 import re
@@ -17,10 +17,11 @@ class FilteredStream(object):
         readableObject = egy objektum, ami rendelkezik readline metódussal. A readline-tól elvárt működés,
             visszaad egy stringet (illetve bármely olyan objektumot, amiben re modul - regexp - segítségével keresni lehet),
             None-t, ha elfogytak az adatok. (tehát e tekintetben úgy műjödik, mintha egy fájlból olvasnék)
-        filterObject = re.compile által visszaadott objektum
+        filterObject = re.compile által visszaadott regexp objektum, amelyre illeszkedő sorokat kell visszaadni az inputból. 
+            Default érték: mindenre illeszkedik.
         
     '''
-    def __init__(self, readableObject, filterObject=re.compile(r".*kernel: (DROP|ACCEPT) ")):
+    def __init__(self, readableObject, filterObject=re.compile(r"^.*$")):
         self.__readableObject=readableObject
         self.__filterObject=filterObject
          
@@ -35,5 +36,4 @@ class FilteredStream(object):
         if not nextLine:
             raise StopIteration
         return nextLine
-    
     
