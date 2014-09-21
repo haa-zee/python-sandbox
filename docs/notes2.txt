@@ -1,0 +1,41 @@
+
+
+logfile -> olvasó -> szűrő -> parser -> adatgyűjtő -> megjelenítő
+
+------------------------------------------------------------
+LogEntry
+  Feladata: a kapott sort mezőkre bontva tárolja (esetleg az eredetit is megőrzi?), visszaadja a kért mező értékét.
+  Akár abstract is lehetne... kellene fölé egy factory, amelyik egy szűrőfeltétel alapján el tudja dönteni, hogy ténylegesen mely típust
+  kell létrehozni a kapott sorból.
+  
+- #init(logRecord: text [, parserObject??]) 
+- #parse() -> setAttr()
+- +getAttr(attrName:text)
+- #setAttr(attrName:text, attrValue:object)
+- +serialize() - (?????)
+
+
+TCP-, UDP-, ICMPLogEntry (extends LogEntry)
+  Az egyes protokollokhoz tartozó, speciális igényeket elégíti ki.
+  
+  
+  
+--------------------------------------------------------------
+LogIterator
+  Iterátor, amely egy nyitott fájlt és egy szűrő objektumot kap a konstruktor paramétereként.
+  Végigmegy a fájlon, ha a szűrő feltételeinek megfelelő sort olvas be, azt visszaadja soronkövetkező értékként.
+  Ha vége a fájlnak, akkor raise StopIteration.
+  
+  #__init__(openedLogfile: file, filterObject: LogFilter)
+  +__iter__(): return(self)
+  +next()
+  
+------------------------------------------------------------------
+LogFilter
+  Regexp alapján végez szűrést. Konstruktor paraméterként megkapja a sorok szűréséhez szükséges regexp-t.
+ 
+  +isItMatching(nextLine: text): boolean  - ha az objektum létrejöttekor lefordított kifejezés illeszkedik a nextLine-ra, akkor True, egyébként False
+  
+  
+  
+     

@@ -8,7 +8,7 @@ rex=re.compile('^(.{11})\s(\d\d:\d\d:\d\d)\s(\S+)\s(\w+\.\w+)\s(\w+):\s+(ACCEPT|
 
 count=0
 n1,n2=0,0
-with open('/home/haazee/kern.log','r') as log:
+with open('/home/haazee/logteszt/kern.log.long','r') as log:
 
     for rec in log:
         w=rex.search(rec)
