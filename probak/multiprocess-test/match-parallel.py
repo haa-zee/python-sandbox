@@ -35,6 +35,8 @@ class Reader(mp.Process):
                 n+=1
                 self.queue_object.put(Message(data=next_block))
                 next_block=infile.readlines(BUFFER_SIZE)
+        
+                 
         print "lines: %u"%(n)
         
         
@@ -67,7 +69,7 @@ class Processor(mp.Process):
 if __name__ == '__main__':
     start=time.time()
     
-    q=mp.Queue(4)
+    q=mp.Queue(40)
     
     r=Reader(q,"kern.log")
     plist=[Processor(q),Processor(q),Processor(q),]
