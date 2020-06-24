@@ -1,3 +1,4 @@
+# teszt
 import time,sys
 
 	
